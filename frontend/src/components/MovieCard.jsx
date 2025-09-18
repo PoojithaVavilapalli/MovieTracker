@@ -14,13 +14,13 @@ export default function MovieCard({ movie }) {
       if (!token) return;
 
       try {
-        const resWatchlist = await fetch("http://localhost:5000/api/movies/watchlist", {
+        const resWatchlist = await fetch("https://movietracker-4.onrender.com/api/movies/watchlist", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const watchlistData = await resWatchlist.json();
         setIsWatchlist(watchlistData.some((m) => m.id === movie.id));
 
-        const resFavourites = await fetch("http://localhost:5000/api/movies/favourites", {
+        const resFavourites = await fetch("https://movietracker-4.onrender.com/api/movies/favourites", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const favouritesData = await resFavourites.json();
@@ -38,7 +38,7 @@ export default function MovieCard({ movie }) {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/movies/watchlist/${isWatchlist ? "remove" : "add"}`,
+        `https://movietracker-4.onrender.com/api/movies/watchlist/${isWatchlist ? "remove" : "add"}`,
         {
           method: "POST",
           headers: {
@@ -60,7 +60,7 @@ export default function MovieCard({ movie }) {
 
     try {
       const res = await fetch(
-        `http://localhost:5000/api/movies/favourites/${isFavourite ? "remove" : "add"}`,
+        `https://movietracker-4.onrender.com/api/movies/favourites/${isFavourite ? "remove" : "add"}`,
         {
           method: "POST",
           headers: {

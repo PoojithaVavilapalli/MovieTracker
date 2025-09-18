@@ -13,7 +13,7 @@ export default function FavouritesPage() {
     const fetchFavourites = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:5000/api/movies/favourites",
+          "https://movietracker-4.onrender.com/api/movies/favourites",
           {
             headers: { Authorization: `Bearer ${token}` },
           }

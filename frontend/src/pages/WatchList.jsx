@@ -12,7 +12,7 @@ export default function WatchlistPage() {
   useEffect(() => {
     const fetchWatchlist = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/movies/watchlist", {
+        const res = await axios.get("https://movietracker-4.onrender.com/api/movies/watchlist", {
           headers: { Authorization: `Bearer ${token}` },
         });
         setWatchlist(res.data);
