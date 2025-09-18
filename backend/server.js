@@ -9,8 +9,11 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
-app.use(express.json());
+app.use(cors({
+  origin: "https://movie-tracker-orcin.vercel.app", // or "*" for all origins
+  methods: ["GET", "POST", "PUT", "DELETE"],
+  credentials: true // if using cookies
+}));app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
