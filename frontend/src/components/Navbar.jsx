@@ -11,7 +11,7 @@ export default function Navbar() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     setIsLoggedIn(!!token);
-  }, []);
+  });
 
   const handleLogout = () => {
     localStorage.removeItem("token");
