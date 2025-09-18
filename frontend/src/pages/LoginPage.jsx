@@ -1,28 +1,34 @@
-import React, { useState } from "react";
+// src/pages/LoginPage.jsx
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/authContext";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const { login } = useContext(AuthContext); // get login function from context
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("https://movietracker-4.onrender.com/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
+      const res = await fetch(
+        "https://movietracker-4.onrender.com/api/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        }
+      );
 
       const data = await res.json();
 
       if (res.ok) {
-        localStorage.setItem("token", data.token); // store JWT
+        login(data.token); // save token and update global state
         navigate("/explore"); // redirect to explore page
       } else {
-        alert(data.error || "Login failed"); // show backend error properly
+        alert(data.error || "Login failed"); // show backend error
       }
     } catch (err) {
       console.error("Login failed:", err);

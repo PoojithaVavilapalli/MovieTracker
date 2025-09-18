@@ -1,32 +1,24 @@
-import React, { useState, useEffect } from "react";
+// src/components/Navbar.jsx
+import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Menu, X } from "lucide-react"; // ⚡ lightweight icons
+import { Menu, X } from "lucide-react";
+import { AuthContext } from "../context/authContext";
 
 export default function Navbar() {
   const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsLoggedIn(!!token);
-  });
-
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    navigate("/login");
-  };
+  const { isLoggedIn, logout } = useContext(AuthContext);
 
   const handleGenreSelect = (genre) => {
     navigate(`/genre/${genre}`);
     setDropdownOpen(false);
-    setMobileMenuOpen(false); // close mobile menu too
+    setMobileMenuOpen(false);
   };
 
   return (
-    <nav className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center relative ">
+    <nav className="bg-gray-900 text-white px-6 py-4 flex justify-between items-center relative">
       {/* Logo */}
       <h1
         className="text-2xl font-bold cursor-pointer"
@@ -84,7 +76,7 @@ export default function Navbar() {
       <div className="hidden md:flex items-center space-x-4">
         {isLoggedIn ? (
           <button
-            onClick={handleLogout}
+            onClick={logout}
             className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold"
           >
             Logout
@@ -164,7 +156,7 @@ export default function Navbar() {
 
           {isLoggedIn ? (
             <button
-              onClick={handleLogout}
+              onClick={logout}
               className="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg font-semibold"
             >
               Logout
