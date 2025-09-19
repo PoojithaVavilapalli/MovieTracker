@@ -18,11 +18,18 @@ const genreMap = {
 export default function GenrePage() {
   const { genre } = useParams();
   const dispatch = useDispatch();
-
   const { genreMovies, loading, error } = useSelector((state) => state.movies);
 
   useEffect(() => {
-    const genreId = genreMap[genre.toLowerCase()];
+    if (!genre) return;
+
+    // 1️⃣ Decode URL in case of %2D, %20 etc.
+    // 2️⃣ Convert to lowercase to match keys in genreMap
+    const normalizedGenre = decodeURIComponent(genre).toLowerCase();
+
+    // 3️⃣ Handle TMDB genre mapping
+    const genreId = genreMap[normalizedGenre];
+
     if (genreId) {
       dispatch(fetchMoviesByGenre(genreId));
     }
@@ -43,7 +50,7 @@ export default function GenrePage() {
   return (
     <div className="bg-gray-900 min-h-screen text-white px-4 sm:px-6 md:px-8 py-6">
       <h1 className="text-2xl sm:text-3xl font-bold mb-6 capitalize">
-        {genre} Movies
+        {decodeURIComponent(genre)} Movies
       </h1>
 
       {genreMovies.length === 0 ? (
