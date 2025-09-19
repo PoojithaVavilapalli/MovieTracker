@@ -2,8 +2,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // ✅ TMDB API Key
-const API_KEY = process.env.REACT_APP_TMDB_API_KEY;
-
+const API_KEY = "75dd737af37127542cb737575b6c5e20";
 
 // --- Async Thunks for API Calls ---
 
