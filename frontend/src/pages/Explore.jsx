@@ -13,7 +13,7 @@ export default function Explore() {
     dispatch(fetchTrendingMovies());
   }, [dispatch]);
 
-  if (loading) return <p className="text-white px-4 sm:px-8 py-6">Loading...</p>;
+  if (loading) return <p className="text-white px-4 sm:px-8 py-6">Loadingggg....</p>;
   if (error) return <p className="text-red-500 px-4 sm:px-8 py-6">Error: {error}</p>;
 
   return (
