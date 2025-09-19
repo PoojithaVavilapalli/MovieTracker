@@ -1,38 +1,20 @@
 // src/pages/Explore.jsx
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchPopularMovies, fetchTrendingMovies } from "../features/movies/movieSlice";
 import MovieCard from "../components/MovieCard";
 
-const API_KEY = "75dd737af37127542cb737575b6c5e20";
-
 export default function Explore() {
-  const [popular, setPopular] = useState([]);
-  const [trending, setTrending] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const { popular, trending, loading, error } = useSelector((state) => state.movies);
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const [popularRes, trendingRes] = await Promise.all([
-          axios.get(
-            `https://api.themoviedb.org/3/movie/popular?api_key=${API_KEY}`
-          ),
-          axios.get(
-            `https://api.themoviedb.org/3/trending/movie/week?api_key=${API_KEY}`
-          ),
-        ]);
-        setPopular(popularRes.data.results.slice(0, 4));
-        setTrending(trendingRes.data.results.slice(0, 4));
-      } catch (err) {
-        console.error("Error fetching movies:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchMovies();
-  }, []);
+    dispatch(fetchPopularMovies());
+    dispatch(fetchTrendingMovies());
+  }, [dispatch]);
 
   if (loading) return <p className="text-white px-4 sm:px-8 py-6">Loading...</p>;
+  if (error) return <p className="text-red-500 px-4 sm:px-8 py-6">Error: {error}</p>;
 
   return (
     <div className="px-4 sm:px-6 md:px-8 py-6 bg-gray-900 text-white min-h-screen">
