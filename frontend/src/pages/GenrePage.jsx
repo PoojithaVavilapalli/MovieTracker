@@ -1,11 +1,11 @@
 // src/pages/GenrePage.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchMoviesByGenre } from "../features/movies/movieSlice";
 import MovieCard from "../components/MovieCard";
 
-const API_KEY = "75dd737af37127542cb737575b6c5e20";
-
+// Map of genre names to TMDB IDs
 const genreMap = {
   action: 28,
   "sci-fi": 878,
@@ -17,33 +17,28 @@ const genreMap = {
 
 export default function GenrePage() {
   const { genre } = useParams();
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+
+  const { genreMovies, loading, error } = useSelector((state) => state.movies);
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      const genreId = genreMap[genre.toLowerCase()];
-      if (!genreId) return;
+    const genreId = genreMap[genre.toLowerCase()];
+    if (genreId) {
+      dispatch(fetchMoviesByGenre(genreId));
+    }
+  }, [genre, dispatch]);
 
-      try {
-        const res = await axios.get(
-          `https://api.themoviedb.org/3/discover/movie?api_key=${API_KEY}&with_genres=${genreId}`
-        );
-        setMovies(res.data.results);
-      } catch (err) {
-        console.error("Error fetching genre movies:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  if (loading) {
+    return <p className="text-white px-4 sm:px-6 md:px-8 py-6">Loading...</p>;
+  }
 
-    fetchMovies();
-  }, [genre]);
-
-  if (loading)
+  if (error) {
     return (
-      <p className="text-white px-4 sm:px-6 md:px-8 py-6">Loading...</p>
+      <p className="text-red-400 px-4 sm:px-6 md:px-8 py-6">
+        Failed to fetch movies: {error}
+      </p>
     );
+  }
 
   return (
     <div className="bg-gray-900 min-h-screen text-white px-4 sm:px-6 md:px-8 py-6">
@@ -51,13 +46,13 @@ export default function GenrePage() {
         {genre} Movies
       </h1>
 
-      {movies.length === 0 ? (
+      {genreMovies.length === 0 ? (
         <p className="text-gray-400 text-center text-sm sm:text-base">
           No movies found for this genre.
         </p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
-          {movies.map((movie) => (
+          {genreMovies.map((movie) => (
             <MovieCard key={movie.id} movie={movie} />
           ))}
         </div>
